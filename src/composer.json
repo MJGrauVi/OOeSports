@@ -12,7 +12,8 @@
         "ramsey/uuid": "^4.9",
         "nesbot/carbon": "^3.10.0",
         "respect/validation": "^2.4",
-        "phroute/phroute": "^2.2"
+        "phroute/phroute": "^2.2",
+      "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {

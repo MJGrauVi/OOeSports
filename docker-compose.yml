@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: php_apache
 
-    user: miguel:miguel
+    user: matomas:matomas
 
     volumes:
       - ./src:/var/www/html

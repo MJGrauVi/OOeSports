@@ -16,3 +16,9 @@ const DIRECTORIO_JS_BACKEND = "/app/View/backend/template/js/";
 
 
 const USUARIO_BASE_DATOS = "matomas";
+
+const DNS_MARIADB = 'mysql:host=mariadb;dbname=proyecto';
+
+const MARIADB_USERNAME = 'miguel';
+
+const MARIADB_PASSWORD = 'leugim';

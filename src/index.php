@@ -9,6 +9,7 @@ use Phroute\Phroute\RouteCollector;
 use App\Controller\UserController;
 use App\Controller\DirectorController;
 
+session_start();
 
 $router = new RouteCollector();
 
@@ -34,6 +35,13 @@ $router->get('/user/{id}',[UserController::class,'show']);
 $router->post('/user',[UserController::class,'store']);
 $router->put('/user/{id}',[UserController::class,'update']);
 $router->delete('/user/{id}',[UserController::class,'destroy']);
+
+
+$router->get('/api/user',[UserController::class,'index']);
+$router->get('/api/user/{id}',[UserController::class,'show']);
+$router->post('/api/user',[UserController::class,'store']);
+$router->put('/api/user/{id}',[UserController::class,'update']);
+$router->delete('/api/user/{id}',[UserController::class,'destroy']);
 
 
 $router->get('/director',[DirectorController::class,'index']);

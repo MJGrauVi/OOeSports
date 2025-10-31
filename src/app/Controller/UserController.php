@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Class\User;
 use App\Enum\UserType;
 use App\Interface\ControllerInterface;
+use App\Model\UserModel;
 
 class UserController implements ControllerInterface
 {
@@ -30,15 +31,16 @@ class UserController implements ControllerInterface
 
         //var_dump($_SERVER);
         //Tengo que buscar en la base de datos los datos del usuario $id
-        $usuario = new User('paula','paula@paula.com','holapaula');
+        $usuario = UserModel::loadUserById($id);
 
         //Tengo que mostrar una vista con los datos del usuario que he obtenido
         include_once DIRECTORIO_VISTAS_BACKEND."mostrarUsuario.php";
+
     }
 
     public function create(){
-
-        if(isset($_SESSION['user'])){
+        return include_once DIRECTORIO_VISTAS_BACKEND."crearUsuario.php";
+        /*if(isset($_SESSION['user'])){
             if($_SESSION['user']->getType()===UserType::ADMIN){
                 return include_once DIRECTORIO_VISTAS_BACKEND."crearUsuario.php";
             }else{
@@ -46,18 +48,24 @@ class UserController implements ControllerInterface
             }
         }else{
             return include_once DIRECTORIO_VISTAS."accesoNoPermitido.php";
-        }
+        }*/
     }
 
     public function store(){
 
-
         //Validar los datos del usuario
         $resultado=User::validateUserCreation($_POST);
 
+
+
+
+
         if (is_array($resultado)){
             return include_once DIRECTORIO_VISTAS_BACKEND."crearUsuario.php";
-
+        }else{
+            //Encriptar la contraseña del usuario
+            $resultado->setPassword(password_hash($resultado->getPassword(),PASSWORD_DEFAULT));
+            UserModel::saveUser($resultado);
         }
 
 
@@ -65,12 +73,18 @@ class UserController implements ControllerInterface
     }
 
     public function edit($id){
+
+        if (isset($_SESSION['user'])){
+            $usuario=UserModel::loadUserById($id);
+            include_once "app/View/backend/editUser.php";
+        }
+
         //Tenemos que buscar en la base de datos el usuario que nos han pasado con ID
         //$usuario=UserModel::loadUser($id)
         $usuario = new User('paula','paula@paula.com','holapaula');
 
         //Llamamos a la vista para que se presente el formulario de edición con los datos del usuario
-        include_once "app/View/backend/editUser.php";
+
 
 
     }
@@ -89,8 +103,16 @@ class UserController implements ControllerInterface
     public function verify(){
         var_dump($_POST);
 
+        $usuario = UserModel::loadUserByEmail($_POST['email']);
 
-
+        if (password_verify($_POST['password'],$usuario->getPassword())){
+            $_SESSION['user']=$usuario;
+        }else{
+            return "No se ha podido realizar el login";
+        }
+    }
+    public function logout(){
+        session_destroy();
     }
 
 }
