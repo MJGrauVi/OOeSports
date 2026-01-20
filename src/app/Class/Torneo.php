@@ -9,14 +9,13 @@ class Torneo implements \JsonSerializable{
     private string $nombre;
     private DateTime $fecha;
     private float $premio_total;
-    private array $equipos;
+    private array $equipos =[];
 
     public function __construct(string $nombre, DateTime $fecha, float $premio_total)
     {
         $this->nombre = $nombre;
         $this->fecha = $fecha;
         $this->premio_total = $premio_total;
-        $this->equipos = [];
     }
 
     public function getId(): int
@@ -79,6 +78,8 @@ class Torneo implements \JsonSerializable{
         return json_encode($this->equipos);
     }
     //Lógica de negocio.
+    //La clase Torneo tiene un método inscribirEquipo($equipo) que permite añadir objetos de tipo Equipo
+    // al array de empresas internas del torneo.
     public function inscribirEquipo(Equipo $equipo): void
     {
         $this->equipos[] = $equipo;
@@ -104,7 +105,7 @@ function jsonSerialize(): mixed
 {
     return [
         "nombre"=>$this->nombre,
-        "fecha"=>$this->getFecha()->format('d/m/Y'),
+        "fecha"=>$this->fecha->format('Y/m/d'),
         "premio_total"=>$this->premio_total
     ];
 }
@@ -123,32 +124,12 @@ function jsonSerialize(): mixed
         if ($fecha === false) {
             return null;
         }
-        $premio = isset($data['premio_tital']) ? (float)$data['premio_total'] : 0;
+        $premio = isset($data['premio_total']) ? (float)$data['premio_total'] : 0;
 
         return new Torneo ($data['nombre'],
             $fecha,
             $premio
         );
     }
-    /*public static function createFromArray(array $data): ?Torneo
-    {
-        if (empty($data['nombre']) || empty($data['fecha'])) {
-            return null;
-        }
 
-        $fecha = \DateTime::createFromFormat('d/m/Y', $data['fecha'])
-            ?: \DateTime::createFromFormat('Y-m-d', $data['fecha']);
-
-        if ($fecha === false) {
-            return null;
-        }
-
-        $premio = isset($data['premios']) ? (float)$data['premios'] : 0;
-
-        return new Torneo(
-            $data['nombre'],
-            $fecha,
-            $premio
-        );
-    }*/
 }

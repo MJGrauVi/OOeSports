@@ -41,30 +41,24 @@ class TorneoModel
     public static function saveTorneo(Torneo $torneo): bool
     {
         try {
-            $conexion = new PDO(
-                "mysql:host=localhost;dbname=examen",
-                "alumno",
-                "alumno",
-                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-            );
+            $conexion = new PDO("mysql:host=mariadb;dbname=examen","alumno","alumno");
+            $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $sql = "INSERT INTO torneos (nombre, fecha, premio_total)
                 VALUES (:nombre, :fecha, :premio_total)";
 
             $stmt = $conexion->prepare($sql);
 
-            $stmt->execute([
+           return $stmt->execute([
                 ':nombre' => $torneo->getNombre(),
                 ':fecha' => $torneo->getFecha()->format('Y-m-d'),
                 ':premio_total' => $torneo->getPremioTotal()
             ]);
-            if ($stmt->rowCount() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+
         } catch (PDOException $e) {
-            return false;
+           // error_log($e->getMessage())
+            //return false;
+            die("ERROR SQL: " . $e->getMessage());
         }
     }
 
@@ -95,3 +89,4 @@ class TorneoModel
         }
     }
 }
+

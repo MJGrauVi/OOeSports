@@ -2,12 +2,13 @@
 
 include_once "vendor/autoload.php";
 
-//session_start();
+session_start();
 
 use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Phroute\Phroute\RouteCollector;
 use App\Controller\TorneoController;
 use App\Controller\JugadorController;
+use App\Controller\EquipoController;
 
 
 $router = new RouteCollector();
@@ -20,7 +21,8 @@ $router->get('/',function (){
 $router->get('/torneo', [TorneoController::class, 'show_login']);
 $router->post('/registroTorneo', [TorneoController::class, 'store']);
 $router->delete('/jugador/{id}',[JugadorController::class, 'destroy']);
-
+$router->get('/equipo/id',[EquipoController::class, 'show']);
+$router->post('/torneo/inscribir', [TorneoController::class, 'inscribir']);
 
 //Resolución de rutas
 $dispatcher = new Phroute\Phroute\Dispatcher($router->getData());

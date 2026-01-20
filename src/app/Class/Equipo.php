@@ -36,20 +36,7 @@ class Equipo implements \JsonSerializable {
             "win_rate"=>$this->win_rate
         ];
     }
-    /*public static function createFromArray(array $equipoData):Equipo{
 
-        if(!isset($equipoData['id'])) {
-
-            $usuario = new Equipo(
-                $equipoData['id'],
-                $equipoData['nombre'],
-                $equipoData['region'],
-                $equipoData['win_rate']);
-
-        }
-
-        return $usuario;
-    }*/
     //Equipo siguiendo el modelo de clase:
     public static function createFromArray(array $data): ?Equipo
     {

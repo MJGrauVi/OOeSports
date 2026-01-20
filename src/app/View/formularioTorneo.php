@@ -14,9 +14,9 @@ $titulo= "Formulario Torneo";
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre">
             <label for="fecha">Fecha:</label>
-            <input type="text" id="fecha" name="fecha">
-            <label for="premios">Total Premios</label>
-            <input type="number" name="premios">
+            <input type="date" id="fecha" name="fecha">
+            <label for="premio_total">Total Premios</label>
+            <input type="number" id=premio_total name="premio_total">
             <button type="submit">Enviar</button>
         </form>
 </div>
