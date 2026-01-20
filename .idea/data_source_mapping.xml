@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/333350a0-e5d9-4d40-8914-180fb5c8f85a/console.sql" value="333350a0-e5d9-4d40-8914-180fb5c8f85a" />
+    <file url="file://$PROJECT_DIR$/sql/basedatos.sql" value="333350a0-e5d9-4d40-8914-180fb5c8f85a" />
+  </component>
+</project>

@@ -61,3 +61,11 @@ INSERT INTO torneos (id, nombre, fecha, premio_total) VALUES
 -- Asociaciones de ejemplo
 INSERT INTO jugador_favoritos (jugador_id, equipo_id) VALUES (1, 1), (1, 2), (2, 3);
 INSERT INTO torneo_equipos (torneo_id, equipo_id) VALUES (1, 1), (1, 2), (1, 3), (1, 4), (2, 2), (2, 3);
+
+/*SELECT DATABASE();*/
+/*Devolvera el nombre de la bbdd "examen"*/
+
+/*SHOW TABLES;*/
+/*SHOW GRANTS FOR 'alumno'@'%';*/
+/*Devolverá
+GRANT ALL PRIVILEGES ON examen.* TO 'alumno'@'%';*/
