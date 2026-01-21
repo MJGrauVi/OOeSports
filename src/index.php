@@ -21,8 +21,14 @@ $router->get('/',function (){
 $router->get('/torneo', [TorneoController::class, 'show_login']);
 $router->post('/registroTorneo', [TorneoController::class, 'store']);
 $router->delete('/jugador/{id}',[JugadorController::class, 'destroy']);
-$router->get('/equipo/id',[EquipoController::class, 'show']);
+//5.En el modelo de la clase Equipo se debe implementar método estatico getEquipoById($id)
+//que buscará un la bbdd un equipo por su id.
+
+$router->get('/equipo/{id}', [EquipoController::class, 'show']);
+
+
 $router->post('/torneo/inscribir', [TorneoController::class, 'inscribir']);
+$router->get('/torneo/{id}', [TorneoController::class, 'show']);
 
 //Resolución de rutas
 $dispatcher = new Phroute\Phroute\Dispatcher($router->getData());

@@ -69,3 +69,4 @@ INSERT INTO torneo_equipos (torneo_id, equipo_id) VALUES (1, 1), (1, 2), (1, 3),
 /*SHOW GRANTS FOR 'alumno'@'%';*/
 /*Devolverá
 //GRANT ALL PRIVILEGES ON examen.* TO 'alumno'@'%';*/
+/*SELECT * FROM torneos WHERE id = 1;*/

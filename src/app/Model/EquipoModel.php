@@ -2,8 +2,8 @@
 
 namespace App\Model;
 
-use Class\Equipo;
-use \PDO;
+use App\Class\Equipo;
+use PDO;
 
 class EquipoModel
 {
@@ -13,7 +13,7 @@ class EquipoModel
     {
         try {
             $con = new Pdo("mysql:host=mariadb;dbname=examen", 'alumno', 'alumno');
-            $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ATTR_ERRMODE);
+            $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $sql = "SELECT * FROM equipos WHERE id = :id";
         $stmt = $con->prepare($sql);

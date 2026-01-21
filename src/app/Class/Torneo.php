@@ -56,10 +56,10 @@ class Torneo implements \JsonSerializable{
         return $this;
     }
 
-    public function setEquipos(array $equipos): Torneo
+    public function setEquipos(array $equipos): void
     {
         $this->equipos = $equipos;
-        return $this;
+
     }
 
 
@@ -106,7 +106,8 @@ function jsonSerialize(): mixed
     return [
         "nombre"=>$this->nombre,
         "fecha"=>$this->fecha->format('Y/m/d'),
-        "premio_total"=>$this->premio_total
+        "premio_total"=>$this->premio_total,
+        "equipos"=>array_map(fn($equipo)=>$equipo->jsonSerialize(), $this->equipos)
     ];
 }
     public static function createFromArray(array $data): ?Torneo

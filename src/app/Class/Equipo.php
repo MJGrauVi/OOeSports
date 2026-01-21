@@ -58,16 +58,11 @@ class Equipo implements \JsonSerializable {
             $winRate = 0;
         }
 
-        $equipo = new Equipo();
-
-        // ID opcional (por ejemplo al reconstruir desde BD)
-        if (!empty($data["id"])) {
-            $equipo->id = (int) $data["id"];
-        }
-        $equipo->nombre = $data["nombre"];
-        $equipo->region = $data["region"];
-        $equipo->win_rate = $winRate;
-
-        return $equipo;
+        return new Equipo(
+            (int) ($data["id"] ?? 0),
+            $data["nombre"],
+            $data["region"],
+            $winRate
+        );
     }
 }

@@ -41,7 +41,7 @@ class TorneoModel
     public static function saveTorneo(Torneo $torneo): bool
     {
         try {
-            $conexion = new PDO("mysql:host=mariadb;dbname=examen","alumno","alumno");
+            $conexion = new PDO("mysql:host=mariadb;dbname=examen", "alumno", "alumno");
             $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $sql = "INSERT INTO torneos (nombre, fecha, premio_total)
@@ -49,42 +49,62 @@ class TorneoModel
 
             $stmt = $conexion->prepare($sql);
 
-           return $stmt->execute([
+            return $stmt->execute([
                 ':nombre' => $torneo->getNombre(),
                 ':fecha' => $torneo->getFecha()->format('Y-m-d'),
                 ':premio_total' => $torneo->getPremioTotal()
             ]);
 
         } catch (PDOException $e) {
-           // error_log($e->getMessage())
+            // error_log($e->getMessage())
             //return false;
             die("ERROR SQL: " . $e->getMessage());
         }
     }
 
-    public static function getTorneoById(string $id):?Torneo{
+    public static function getTorneoById(string $id): ?Torneo
+    {
 
-        try{
-            $conexion = new PDO("mysql:host=mariadb;dbname=examen","alumno","alumno");
-            $conexion->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-        }catch (\PDOException $error){
-            echo $error->getMessage();
-        }
-        //Cadena de conexion;
+        try {
+            $conexion = new PDO("mysql:host=mariadb;dbname=examen", "alumno", "alumno");
+            $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $sql="SELECT * FROM torneos WHERE id=:id";
+            //Cadena de conexion;
 
-        $stmt = $conexion->prepare($sql);
+            $sql = "SELECT * FROM torneos WHERE id=:id";
 
-        $stmt->bindValue('id',$id);
+            $stmt = $conexion->prepare($sql);
 
-        $stmt->execute();
+            $stmt->bindValue('id', $id);
 
-        $resultado= $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->execute();
 
-        if ($resultado){
-            return Torneo::createFromArray($resultado);
-        }else{
+            $torneoData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$torneoData) return null;
+
+            // SELECT de los equipos de ese torneo (un solo SELECT)
+            $sql2 = "SELECT * FROM equipos WHERE torneo_id = :id";
+
+            $stmt2 = $conexion->prepare($sql2);
+            $stmt2->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt2->execute();
+            $equiposData = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+            $equipos = [];
+            foreach ($equiposData as $eq) {
+                $equipo = Equipo::createFromArray($eq);
+                if ($equipo) $equipos[] = $equipo;
+            }
+
+            return new Torneo(
+                (int)$torneoData['id'],
+                $torneoData['nombre'],
+                $equipos
+            );
+
+        } catch (\PDOException $e) {
+            error_log("Error en conexion: " . $e->getMessage());
             return null;
         }
     }
