@@ -65,7 +65,7 @@ class TorneoController
         ]);
     }
     public function show($id) {
-        $torneo = TorneoModel::getTorneoById((int)$id);
+        $torneo = TorneoModel::getTorneoById($id);
 
         header('Content-Type: application/json; charset=UTF-8');
 

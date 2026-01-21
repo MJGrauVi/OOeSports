@@ -7,6 +7,7 @@ class EquipoController
 {
     public function show($id)
     {
+
         // Validación básica del ID
         if (!is_numeric($id) || $id <= 0) {
             http_response_code(400);
