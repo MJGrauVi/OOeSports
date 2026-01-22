@@ -25,6 +25,10 @@ $router->delete('/jugador/{id}',[JugadorController::class, 'destroy']);
 //que buscará un la bbdd un equipo por su id.
 
 $router->get('/equipo/{id}', [EquipoController::class, 'show']);
+$router->post('/equipo', [EquipoController::class, 'store']);
+$router->delete('/equipo/{id}',[EquipoController::class, 'destroy']);
+
+$router->put('/equipo/{id}',[EquipoController::class, 'update']);
 
 
 $router->post('/torneo/inscribir', [TorneoController::class, 'inscribir']);

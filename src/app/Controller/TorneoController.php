@@ -27,7 +27,7 @@ class TorneoController
             http_response_code(201);
         } else {
             http_response_code(500);
-            echo "Error al guardar el torneo";
+            return json_encode([ "error"=>"Error al guardar el torneo"]);
         }
     }
     public function show_login()
