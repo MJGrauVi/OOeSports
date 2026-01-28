@@ -11,9 +11,9 @@ class TorneoController
 
     public function store()
     {
-        error_log("ENTRA EN store()");
+      //  error_log("ENTRA EN store()");
         $torneo = Torneo::createFromArray($_POST);
-        error_log(var_export($torneo, true));
+       // error_log(var_export($torneo, true));
 
         if ($torneo === null) {
             http_response_code(400);
@@ -22,7 +22,6 @@ class TorneoController
         }
 
         if (TorneoModel::saveTorneo($torneo)) {
-            error_log(print_r($_POST, true));
             echo "Torneo guardado correctamente";
             http_response_code(201);
         } else {
@@ -78,4 +77,48 @@ class TorneoController
         http_response_code(200);
         echo json_encode($torneo);
     }
+    public function showNombre($nombre) {
+        $torneo = TorneoModel::getTorneoByName($nombre);
+
+        header('Content-Type: application/json; charset=UTF-8');
+
+        if ($torneo === null) {
+            http_response_code(404);
+            echo json_encode(["error" => "Torneo no encontrado"]);
+            return;
+        }
+
+        http_response_code(200);
+        echo json_encode($torneo);
+    }
+    public function destroy ($id) {//Funciona orrectamente
+        error_log("ENTRA EN destroy()");
+        if(TorneoModel::deleteTorneoById($id)){
+            //El torneo se ha borrado correctamente.
+            http_response_code(200);
+            return json_encode([
+                "error"=>false,
+                "message"=>"El torneo con $id se ha borrado correctamente",
+                "code"=>200
+            ]);
+        }else{
+    //Ha habido algún problema con la base de datos al borrar el torneo.
+            http_response_code(404);
+            return json_encode([
+                "error"=>true,
+                "message"=>"No existe el torneo con id $id.",
+                "code"=>404
+                ]);
+        }
+    }
+    public function crearDemo() {
+        $torneo = new Torneo(
+            "Torneo de Prueba",
+            new DateTime("2025-05-01"),
+            10000 );
+        $model = new TorneoModel();
+        $model->saveTorneo($torneo);
+        echo "Torneo creado correctamente"; }
 }
+
+

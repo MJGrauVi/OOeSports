@@ -9,11 +9,14 @@ use PDO;
 class EquipoModel
 {
 
-    //Punto 5 examen.
+    //Punto 5 examen. Implementar
     public static function getEquipoById($id): ?Equipo
     {
         try {
-            $con = new Pdo("mysql:host=mariadb;dbname=examen", 'alumno', 'alumno');
+            $con = new Pdo(
+                "mysql:host=mariadb;dbname=examen",
+                'alumno',
+                'alumno');
             $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $sql = "SELECT * FROM equipos WHERE id = :id";

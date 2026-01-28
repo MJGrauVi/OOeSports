@@ -8,7 +8,7 @@ use DateTime;
 use PDOException;
 
 class TorneoModel
-    /* $sql = "INSERT INTO torneos (nombre, fecha, premio_total) VALUES (:nombre, :fecha, :premio_total)";*/
+/* $sql = "INSERT INTO torneos (nombre, fecha, premio_total) VALUES (:nombre, :fecha, :premio_total)";*/
 {
     /*public static function saveTorneo(Torneo $torneo): bool
     {
@@ -49,20 +49,60 @@ class TorneoModel
 
             $stmt = $conexion->prepare($sql);
 
-            return $stmt->execute([
+
+            $stmt->bindValue('nombre', $torneo->getNombre());
+            $stmt->bindValue('fecha', $torneo->getFecha()->format('Y-m-d'));
+            $stmt->bindValue('premio_total', $torneo->getPremioTotal());
+
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+            /*      return $stmt->execute([
                 ':nombre' => $torneo->getNombre(),
                 ':fecha' => $torneo->getFecha()->format('Y-m-d'),
                 ':premio_total' => $torneo->getPremioTotal()
-            ]);
-
+            ]); */
         } catch (PDOException $e) {
-            // error_log($e->getMessage())
-            //return false;
-            die("ERROR SQL: " . $e->getMessage());
+            error_log($e->getMessage());
+            return false;
+            //die("ERROR SQL: " . $e->getMessage());
         }
     }
+    public static function getTorneoById(int $id):?Torneo{
+        //Conseguir el torneo de la bd.
+        $conexion = new PDO("mysql:host=mariadb;dbname=examen",
+        "alumno",
+        "alumno");
+        $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    public static function getTorneoById(string $id): ?Torneo
+        $sql = "select * from torneos WHERE id = :id";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindValue("id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $resultado ? Torneo::createFromArray($resultado) : null;
+
+    }
+    public static function getTorneoByName(string $nombre):?Torneo{
+        //Conseguir el torneo de la bd.
+        $conexion = new PDO("mysql:host=mariadb;dbname=examen",
+            "alumno",
+            "alumno");
+        $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $sql = "select * from torneos WHERE nombre = :nombre";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindValue("nombre", $nombre, PDO::PARAM_STR);
+        $stmt->execute();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $resultado ? Torneo::createFromArray($resultado) : null;
+
+    }
+    public static function getTorneoByIdConEquipos(string $id): ?Torneo
     {
 
         try {
@@ -102,11 +142,27 @@ class TorneoModel
                 $torneoData['nombre'],
                 $equipos
             );
-
         } catch (\PDOException $e) {
             error_log("Error en conexion: " . $e->getMessage());
             return null;
         }
     }
-}
 
+    public static function deleteTorneoById(int $id): bool //funciona correctamente
+    {
+        try {
+            $conexion = new PDO("mysql:host=mariadb;dbname=examen", 'alumno', "alumno");
+            $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "DELETE FROM torneos WHERE id=:id";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // 👇 CLAVE DEL PROBLEMA
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("Error en conexion: " . $e->getMessage());
+            return false;
+        }
+    }
+}

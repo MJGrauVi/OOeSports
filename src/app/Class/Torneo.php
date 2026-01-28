@@ -56,12 +56,15 @@ class Torneo implements \JsonSerializable{
         return $this;
     }
 
-    public function setEquipos(array $equipos): void
+    public function convertirEquiposToJson(): string{
+        return json_encode($this->equipos);
+    }
+    public function setEquipos(array $equipos): Torneo
     {
         $this->equipos = $equipos;
+        return $this;
 
     }
-
 
 
     public function getPremioTotal(): float
@@ -74,19 +77,23 @@ class Torneo implements \JsonSerializable{
         $this->premio_total = $premio_total;
         return $this;
     }
-    public function convertirEquiposToJson(): string{
-        return json_encode($this->equipos);
-    }
+
     //Lógica de negocio.
     //La clase Torneo tiene un método inscribirEquipo($equipo) que permite añadir objetos de tipo Equipo
     // al array de empresas internas del torneo.
-    public function inscribirEquipo(Equipo $equipo): void
+   /* public function inscribirEquipo($id, $nombre, $region, $win_rate)
+    {
+        $equipo = new Equipo($id, $nombre, $region, $win_rate);
+        $this->equipos[] = $equipo;
+    }*/
+    public function inscribirEquipo(Equipo $equipo):void
     {
         $this->equipos[] = $equipo;
     }
 
     //calcularDificultadMedia que tendra que calcular la media "win_rate" a partir
     // de los datos de los equipos asociados a ese torneo.
+
     public function calcularDificultadMedia(): float
     {
         if (count($this->equipos) === 0) {
@@ -104,8 +111,9 @@ class Torneo implements \JsonSerializable{
 function jsonSerialize(): mixed
 {
     return [
+       /* "id" => $this->id,*/
         "nombre"=>$this->nombre,
-        "fecha"=>$this->fecha->format('Y/m/d'),
+        "fecha"=>$this->fecha->format('Y-m-d'),
         "premio_total"=>$this->premio_total,
         "equipos"=>array_map(fn($equipo)=>$equipo->jsonSerialize(), $this->equipos)
     ];
@@ -120,17 +128,30 @@ function jsonSerialize(): mixed
 
         // Formato formulario
         if ($fecha === false) {
-            $fecha = DateTime::createFromFormat('d/m/Y', $data['fecha']);
+            $fecha = DateTime::createFromFormat('d-m-Y', $data['fecha']);
         }
         if ($fecha === false) {
             return null;
         }
         $premio = isset($data['premio_total']) ? (float)$data['premio_total'] : 0;
 
-        return new Torneo ($data['nombre'],
+        $torneo = new Torneo (
+            $data['nombre'],
             $fecha,
             $premio
         );
+        //Si viene ID, lo asignamos.
+        if(isset($data['id'])){
+            $torneo->setId((int)$data['id']);
+        }
+        //Equipos: puede venir como JSON o como array.
+        if(isset($data['equipos'])){
+            $equipos = is_string($data['equipos']) ? json_decode($data['equipos'], true) : $data['equipos'];
+            $torneo->setEquipos($equipos);
+        }
+        return $torneo;
     }
+
+
 
 }
